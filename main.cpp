@@ -5,7 +5,8 @@
 #include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <io.h>
+// #include <io.h>
+#include <filesystem>
 #include <time.h>
 
 #include "NeuralNetwork.h"
@@ -58,17 +59,13 @@ void enumFolder(const char* folder, vector<string>& files) {
 	string str = folder, pathName;
 	str.append("\\*.png");
 
-	struct _finddata_t c_file;
-	intptr_t hFile;
-
-	if ((hFile = _findfirst(str.c_str(), &c_file)) == -1L)
-		cout << "No *.png files in " << folder << " !" << endl;
-	else {
-		do {
-			files.push_back(string(folder) + "\\" + c_file.name);
-
-		} while (_findnext(hFile, &c_file) == 0);
-		_findclose(hFile);
+	for (const auto& entry : std::filesystem::directory_iterator(folder))
+	{
+		if (std::filesystem::path(entry.path()).extension() == ".png")
+		{
+			// files.push_back(string(folder) + "/" + entry.path().generic_string());
+			files.push_back(entry.path().generic_string());
+		}
 	}
 }
 
@@ -79,7 +76,7 @@ void train(NeuralNetwork& net) {
 	vector<string>::iterator it[DIGITS];
 	// read files names
 	for (int n = 0; n < DIGITS; n++) {
-		string path = ("mnist_png\\training\\") + string(1, '0' + n);
+		string path = ("mnist-pngs/train/") + string(1, '0' + n);
 		enumFolder(path.c_str(), files[n]);
 	}
 
@@ -118,7 +115,7 @@ void test(NeuralNetwork& net) {
 	vector<string> files[DIGITS];
 	vector<string>::iterator it[DIGITS];
 	for (int n = 0; n < DIGITS; n++) {
-		string path = ("mnist_png\\testing\\") + string(1, '0' + n);
+		string path = ("mnist-pngs/test/") + string(1, '0' + n);
 		enumFolder(path.c_str(), files[n]);
 	}
 

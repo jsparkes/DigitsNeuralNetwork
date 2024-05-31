@@ -852,7 +852,7 @@ void pngwriter::pngwriter_rename(long unsigned int index)
 	return;
      }
 
-   if( 0>  sprintf_s(buffer, "%9.9lu.png",index))
+   if( 0>  sprintf(buffer, "%9.9lu.png",index))
      {
 	std::cerr << " PNGwriter::pngwriter_rename - ERROR **: Error creating numerical filename." << std::endl;
 	return;
@@ -889,7 +889,7 @@ void pngwriter::close()
    png_structp     png_ptr;
    png_infop       info_ptr;
 
-   fopen_s(&fp, filename_.c_str(), "wb");
+   fp = fopen(filename_.c_str(), "wb");
    if( fp == NULL)
      {
 	std::cerr << " PNGwriter::close - ERROR **: Error creating file (fopen() returned NULL pointer)." << std::endl;
@@ -1170,7 +1170,7 @@ void pngwriter::readfromfile(char * name)
    int bit_depth, color_type, interlace_type;
    //   png_uint_32     i;
    //
-   fopen_s (&fp, name,"rb");
+   fp = fopen (name,"rb");
    if (fp==NULL)
      {
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file \"" << std::flush;

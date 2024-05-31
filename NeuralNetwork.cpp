@@ -249,7 +249,7 @@ bool NeuralNetwork::load(const char* filename) {
 	getline(file, line, '\n');
 	stringstream we(line);
 	getline(we, name, ':');
-	if (!name._Equal("weights"))
+	if (!(name == "weights"))
 		return false;
 
 	string matrix;
